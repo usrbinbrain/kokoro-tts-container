@@ -1,0 +1,29 @@
+name: Build and Push kokoro-tts-container
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+
+      - name: Install Python requirements
+        run: pip3 install -r requirements.txt
+
+      - name: Run setup script
+        run: python3 setup.py
+
+      - name: Docker login
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t usrbinbrain/kokoro-tts-container:latest .
+
+      - name: Push Docker image
+        run: docker push usrbinbrain/kokoro-tts-container:latest
