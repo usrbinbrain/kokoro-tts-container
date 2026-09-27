@@ -13,11 +13,16 @@ jobs:
       - name: Checkout repo code
         uses: actions/checkout@v4
 
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install Python requirements
-        run: pip3 install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
       - name: Run setup script
-        run: python3 setup.py
+        run: python setup.py
 
       - name: Docker login
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
